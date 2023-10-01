@@ -50,7 +50,7 @@ public class FoodVillaController {
 
     @PostMapping("/v1/upload-image")
     public void uploadImage(@RequestParam("imageFile")MultipartFile file) throws IOException {
-        Map<?, ?> result = cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
+        Map result = cloudinary.uploader().upload(file.getBytes(), Map.of());
 //        cloudinary.uploader().upload(file, ObjectUtils.emptyMap());
         System.out.println(result);
 

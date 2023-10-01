@@ -17,7 +17,7 @@ public class CloudinaryConfig {
     private String secretValueCloudinary;
 
     @Bean
-    public Cloudinary cloudinaryConfiguration() {
+    public Cloudinary cloudinary() {
         Cloudinary cloudinary = null;
         Map config = new HashMap();
         config.put("cloud_name", "dlg7e8dwa");
