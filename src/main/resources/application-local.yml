@@ -1,0 +1,13 @@
+server:
+  port: 8081
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://food-villa-application:${MONGO_PASSWORD}@cluster0.ibdjsm8.mongodb.net/
+      database: ${database}
+      auto-index-creation: true
+
+
+cloudinary:
+  api-secret: ${CLOUDINARY_SECRET}
