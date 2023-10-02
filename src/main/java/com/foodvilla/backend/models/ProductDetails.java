@@ -4,18 +4,18 @@ public class ProductDetails {
 //    "description": "string can be a para try to convert to html format",
 //    public String description;
 
-    public String description;
+    public String storageAndConsumption;
 
     public String ingredients;
 
     public String allergens;
 
-    public String getDescription() {
-        return description;
+    public String getStorageAndConsumption() {
+        return storageAndConsumption;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setStorageAndConsumption(String storageAndConsumption) {
+        this.storageAndConsumption = storageAndConsumption;
     }
 
     public String getIngredients() {

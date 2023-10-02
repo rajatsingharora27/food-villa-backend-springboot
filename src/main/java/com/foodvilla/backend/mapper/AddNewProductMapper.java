@@ -22,7 +22,8 @@ public class AddNewProductMapper {
     private ProductDetails getProductDetails(ProductDetails productDetails) {
         ProductDetails pd=new ProductDetails();
         pd.setAllergens(productDetails.getAllergens());
-        pd.setDescription(productDetails.getDescription());
+        pd.setStorageAndConsumption(productDetails.getStorageAndConsumption());
+        pd.setIngredients(productDetails.getIngredients());
         pd.setIngredients(pd.getIngredients());
         return  pd;
     }

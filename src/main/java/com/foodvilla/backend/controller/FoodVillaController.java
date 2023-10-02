@@ -25,7 +25,7 @@ import java.util.List;
 public class FoodVillaController {
 
 
-     Logger log = LoggerFactory.getLogger(FoodVillaController.class);
+    Logger log = LoggerFactory.getLogger(FoodVillaController.class);
     @Autowired
     private ProductCreationValidate productCreationValidate;
 
@@ -69,12 +69,21 @@ public class FoodVillaController {
         productService.addImageToRespectiveProduct(file,productName , internalProcessCommonResponse);
     }
 
+    @GetMapping("/v1/get-products-dropdown")
+    public List<String> getAllProductName(){
+        productService.getAllTheDropDownProductName();
+        return null;
+    }
+
+
+
     // This api will get all the product mapped with the image from productImage table , productInfo
     @GetMapping("/v1/get-products/")
     public ResponseEntity<List<ProductInfoWithImageResult>> getAllTheQueryParamRelatedProduct(@RequestParam(name="productCategory") String productCategory){
 
         List<ProductInfoWithImageResult> response= productService.getQueryPassedProduct(productCategory);
         return new ResponseEntity<>(response,HttpStatus.OK);
+
 
     }
 

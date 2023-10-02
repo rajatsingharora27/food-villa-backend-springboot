@@ -10,6 +10,7 @@ import com.foodvilla.backend.models.InputRequestCreateProduct;
 import com.foodvilla.backend.models.ProductInfoWithImageResult;
 import com.foodvilla.backend.repository.ProductCreateRepository;
 import com.foodvilla.backend.repository.ProductImageRepository;
+import com.foodvilla.backend.utils.ComplexQueryService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 //import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.data.mongodb.core.aggregation.Aggregation;
 import org.springframework.data.mongodb.core.aggregation.LookupOperation;
+import org.springframework.data.mongodb.core.aggregation.ProjectionOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -44,10 +46,13 @@ public class ProductService {
     private ProductImageRepository productImageRepository;
 
     @Autowired
-    private MongoTemplate mongoTemplate;
+    private ComplexQueryService complexQueryService;
 
     @Autowired
     private Cloudinary cloudinary;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
 
     public void addNewProduct(InputRequestCreateProduct inputRequest) {
@@ -94,27 +99,14 @@ public class ProductService {
     }
 
     public List<ProductInfoWithImageResult> getQueryPassedProduct(String productCategory){
-        Query query=new Query();
+
         List<ProductInfoWithImageResult>result=new ArrayList<>();
         try{
             if(productCategory.isEmpty()){
-
             }
-//            query.addCriteria(Criteria.where("productCategory").is(productCategory));
-            LookupOperation lookupOperation = LookupOperation.newLookup()
-                    .from("productImage")
-                    .localField("productName")
-                    .foreignField("productName")
-                    .as("productImageListDetails");
-
-            Aggregation aggregation = Aggregation.newAggregation(Aggregation.match(Criteria.where("productCategory").is(productCategory)) , lookupOperation);
-            result=mongoTemplate.aggregate(aggregation, "productInfo",ProductInfoWithImageResult.class).getMappedResults();
-
-            log.info("result ->{}" ,result);
-
-
+            result=complexQueryService.getListOfProductInfoWithTheProductImage(productCategory);
         }catch(Exception ex){
-
+            log.error("Exception");
         }
         return result;
 
@@ -122,6 +114,15 @@ public class ProductService {
 
     }
 
+    public List<String> getAllTheDropDownProductName(){
+        Query query=new Query();
+        query.fields().include("productName");
+        List<String>ans=mongoTemplate.find(query,String.class);
+        for(String ele:ans){
+            System.out.println(ele);
+        }
+        return null;
+    }
 
 
 
