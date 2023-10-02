@@ -7,6 +7,7 @@ import com.foodvilla.backend.dao.ProductImageDao;
 import com.foodvilla.backend.mapper.AddNewProductMapper;
 import com.foodvilla.backend.models.InternalProcessCommonResponse;
 import com.foodvilla.backend.models.InputRequestCreateProduct;
+import com.foodvilla.backend.models.ProductInfoWithImageResult;
 import com.foodvilla.backend.repository.ProductCreateRepository;
 import com.foodvilla.backend.repository.ProductImageRepository;
 import org.slf4j.Logger;
@@ -16,6 +17,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 //import org.springframework.data.mongodb.core.query.Criteria;
 //import org.springframework.data.mongodb.core.query.Query;
 //import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.data.mongodb.core.aggregation.Aggregation;
+import org.springframework.data.mongodb.core.aggregation.LookupOperation;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.data.mongodb.core.query.Update;
@@ -89,6 +92,37 @@ public class ProductService {
             log.error("Exception Occurred in {{addImageToRespectiveProduct()}} ex->", ex);
         }
     }
+
+    public List<ProductInfoWithImageResult> getQueryPassedProduct(String productCategory){
+        Query query=new Query();
+        List<ProductInfoWithImageResult>result=new ArrayList<>();
+        try{
+            if(productCategory.isEmpty()){
+
+            }
+//            query.addCriteria(Criteria.where("productCategory").is(productCategory));
+            LookupOperation lookupOperation = LookupOperation.newLookup()
+                    .from("productImage")
+                    .localField("productName")
+                    .foreignField("productName")
+                    .as("productImageListDetails");
+
+            Aggregation aggregation = Aggregation.newAggregation(Aggregation.match(Criteria.where("productCategory").is(productCategory)) , lookupOperation);
+            result=mongoTemplate.aggregate(aggregation, "productInfo",ProductInfoWithImageResult.class).getMappedResults();
+
+            log.info("result ->{}" ,result);
+
+
+        }catch(Exception ex){
+
+        }
+        return result;
+
+
+
+    }
+
+
 
 
 }

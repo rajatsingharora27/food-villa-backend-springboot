@@ -2,6 +2,7 @@ package com.foodvilla.backend.controller;
 
 import com.foodvilla.backend.models.InternalProcessCommonResponse;
 import com.foodvilla.backend.models.InputRequestCreateProduct;
+import com.foodvilla.backend.models.ProductInfoWithImageResult;
 import com.foodvilla.backend.models.Response;
 import com.foodvilla.backend.service.ProductService;
 import com.foodvilla.backend.validation.ProductCreationValidate;
@@ -66,6 +67,15 @@ public class FoodVillaController {
     public void uploadImage(@RequestParam("imageFile")MultipartFile file ,@RequestParam("productName") String productName) throws IOException {
         InternalProcessCommonResponse internalProcessCommonResponse =new InternalProcessCommonResponse();
         productService.addImageToRespectiveProduct(file,productName , internalProcessCommonResponse);
+    }
+
+    // This api will get all the product mapped with the image from productImage table , productInfo
+    @GetMapping("/v1/get-products/")
+    public ResponseEntity<List<ProductInfoWithImageResult>> getAllTheQueryParamRelatedProduct(@RequestParam(name="productCategory") String productCategory){
+
+        List<ProductInfoWithImageResult> response= productService.getQueryPassedProduct(productCategory);
+        return new ResponseEntity<>(response,HttpStatus.OK);
+
     }
 
 
