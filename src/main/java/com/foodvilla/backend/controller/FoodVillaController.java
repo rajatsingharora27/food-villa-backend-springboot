@@ -1,9 +1,6 @@
 package com.foodvilla.backend.controller;
 
-import com.foodvilla.backend.models.InternalProcessCommonResponse;
-import com.foodvilla.backend.models.InputRequestCreateProduct;
-import com.foodvilla.backend.models.ProductInfoWithImageResult;
-import com.foodvilla.backend.models.Response;
+import com.foodvilla.backend.models.*;
 import com.foodvilla.backend.service.ProductService;
 import com.foodvilla.backend.validation.ProductCreationValidate;
 import org.slf4j.Logger;
@@ -38,7 +35,7 @@ public class FoodVillaController {
 
 
 
-
+//   ************************************ Route Available to Admin only*******************************
     @PostMapping(value = "/v1/add-product" )
     public ResponseEntity<Response> createProduct(@RequestBody InputRequestCreateProduct inputRequest){
 
@@ -75,14 +72,27 @@ public class FoodVillaController {
         return null;
     }
 
+    //   ************************************ Route Available to Admin only*******************************
 
+
+
+
+
+//   ************************************ Route Available to Public *******************************
 
     // This api will get all the product mapped with the image from productImage table , productInfo
     @GetMapping("/v1/get-products/")
     public ResponseEntity<List<ProductInfoWithImageResult>> getAllTheQueryParamRelatedProduct(@RequestParam(name="productCategory") String productCategory){
-
         List<ProductInfoWithImageResult> response= productService.getQueryPassedProduct(productCategory);
         return new ResponseEntity<>(response,HttpStatus.OK);
+    }
+
+
+    public void registerUserSignUP(@RequestBody RegisterUserInputBody registerUserInputBody){
+
+
+
+
 
 
     }

@@ -110,8 +110,6 @@ public class ProductService {
         }
         return result;
 
-
-
     }
 
     public List<String> getAllTheDropDownProductName(){
