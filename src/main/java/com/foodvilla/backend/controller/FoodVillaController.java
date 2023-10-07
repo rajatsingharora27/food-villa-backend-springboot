@@ -2,7 +2,8 @@ package com.foodvilla.backend.controller;
 
 import com.foodvilla.backend.models.*;
 import com.foodvilla.backend.service.ProductService;
-import com.foodvilla.backend.validation.ProductCreationValidate;
+import com.foodvilla.backend.utils.UtilityMethods;
+import com.foodvilla.backend.validation.Validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,16 +16,17 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @CrossOrigin("*")
-//@RequestMapping("/api")
+@RequestMapping("/api")
 public class FoodVillaController {
 
 
     Logger log = LoggerFactory.getLogger(FoodVillaController.class);
     @Autowired
-    private ProductCreationValidate productCreationValidate;
+    private Validation validation;
 
 
     @Value("${spring.profiles.active}")
@@ -33,30 +35,37 @@ public class FoodVillaController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private UtilityMethods utilityMethods;
+
 
 
 //   ************************************ Route Available to Admin only*******************************
+
+
+
     @PostMapping(value = "/v1/add-product" )
     public ResponseEntity<Response> createProduct(@RequestBody InputRequestCreateProduct inputRequest){
 
+        String refId=utilityMethods.uniqueRefIdGenerate();
         InternalProcessCommonResponse internalProcessCommonResponse =new InternalProcessCommonResponse();
         Response response=new Response();
-        log.info("{{createProduct()}} controller stated");
-
-        productCreationValidate.validateProductDetails(inputRequest, internalProcessCommonResponse);
+        ResponseData responseData=new ResponseData();
+        response.setRefId(refId);
+        log.info("{{createProduct()}} controller stated for the redId :{} " , refId);
+        validation.validateProductDetails(inputRequest, internalProcessCommonResponse);
         if(internalProcessCommonResponse.isValid){
             productService.addNewProduct(inputRequest);
         }
         if(internalProcessCommonResponse.getErrorMessageList()!=null && !internalProcessCommonResponse.getErrorMessageList().isEmpty()){
-            List<String> errorMessage =new ArrayList<>();
-            for(String err : internalProcessCommonResponse.getErrorMessageList()){
-                errorMessage.add(err);
-            }
+            List<ErrorMessageListWithCode> errorMessage =utilityMethods.criticalErrorMessageList(internalProcessCommonResponse);
             response.setMessage(errorMessage);
-            response.setProductAddMessage("Product cannot be added");
+            responseData.setIsProductAdded("Product Cannot be added");
+            response.setResponseData(responseData);
             return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
-        response.setProductAddMessage("data Saved");
+        responseData.setIsProductAdded("Product Added successfully");
+        response.setResponseData(responseData);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
@@ -86,17 +95,4 @@ public class FoodVillaController {
         List<ProductInfoWithImageResult> response= productService.getQueryPassedProduct(productCategory);
         return new ResponseEntity<>(response,HttpStatus.OK);
     }
-
-
-    public void registerUserSignUP(@RequestBody RegisterUserInputBody registerUserInputBody){
-
-
-
-
-
-
-    }
-
-
-
 }

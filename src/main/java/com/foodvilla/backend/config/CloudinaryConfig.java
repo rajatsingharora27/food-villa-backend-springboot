@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 @Configuration
 public class CloudinaryConfig {
@@ -26,5 +27,4 @@ public class CloudinaryConfig {
         cloudinary = new Cloudinary(config);
         return cloudinary;
     }
-
 }
