@@ -1,5 +1,9 @@
 package com.foodvilla.backend.models.ResponseDataIndividualControllerResponseFiled;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
 public class UserSignUpDetails {
 
     public String username;
@@ -7,6 +11,9 @@ public class UserSignUpDetails {
     public String emailId;
 
     public String token;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date createdDate = new Date();
 
     public String getUsername() {
         return username;

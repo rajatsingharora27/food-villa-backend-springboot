@@ -10,6 +10,7 @@ import org.springframework.scheduling.annotation.EnableAsync;
 
 @SpringBootApplication
 @EnableAsync
+
 //@EnableSwagger2
 public class BackendApplication {
 

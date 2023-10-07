@@ -2,7 +2,9 @@ package com.foodvilla.backend.dao;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.core.mapping.Field;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
 
 @Document(collection = "registerUser")
 public class RegisterUserDao {
@@ -10,17 +12,20 @@ public class RegisterUserDao {
     @Id
     public String id;
 
-    @Field("userName")
+
     public String userName;
 
-    @Field("email")
+
     public String email;
 
-    @Field("phoneNumber")
+
     public String phoneNumber;
 
-    @Field("password")
+
     public String password;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date createdDate = new Date();
 
     public String getUserName() {
         return userName;

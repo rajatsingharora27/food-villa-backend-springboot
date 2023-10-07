@@ -1,6 +1,6 @@
 package com.foodvilla.backend.models;
 
-public class RegisterUserInputBody {
+public class SignUpUserInputBody {
 
     private String userName;
 

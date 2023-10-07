@@ -2,7 +2,7 @@ package com.foodvilla.backend.validation;
 
 import com.foodvilla.backend.models.InternalProcessCommonResponse;
 import com.foodvilla.backend.models.InputRequestCreateProduct;
-import com.foodvilla.backend.models.RegisterUserInputBody;
+import com.foodvilla.backend.models.SignUpUserInputBody;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +42,7 @@ public class Validation {
     }
 
 
-    public void validateUserDetailsInPut(RegisterUserInputBody userDetailsInput, InternalProcessCommonResponse internalProcessCommonResponse) {
+    public void validateUserDetailsInPut(SignUpUserInputBody userDetailsInput, InternalProcessCommonResponse internalProcessCommonResponse) {
         List<String> errorMessage = new ArrayList<>();
         try {
             CompletableFuture<Boolean> validateUserName = asyncMethod.validateUserName(userDetailsInput, internalProcessCommonResponse, errorMessage);

@@ -1,6 +1,6 @@
 package com.foodvilla.backend.models;
 
-import com.foodvilla.backend.models.ResponseDataIndividualControllerResponseFiled.ProductCreatedResponse;
+import com.foodvilla.backend.models.ResponseDataIndividualControllerResponseFiled.ProductAvaiableInStore;
 
 import java.util.List;
 
@@ -11,7 +11,7 @@ public class InternalProcessCommonResponse {
 
     public List<String> errorMessageList;
 
-    public ProductCreatedResponse productCreatedResponse;
+    public ProductAvaiableInStore productAvaiableInStore;
 
     public Boolean getValid() {
         return isValid;
@@ -29,11 +29,11 @@ public class InternalProcessCommonResponse {
         this.errorMessageList = errorMessageList;
     }
 
-    public ProductCreatedResponse getProductCreatedResponse() {
-        return productCreatedResponse;
+    public ProductAvaiableInStore getProductCreatedResponse() {
+        return productAvaiableInStore;
     }
 
-    public void setProductCreatedResponse(ProductCreatedResponse productCreatedResponse) {
-        this.productCreatedResponse = productCreatedResponse;
+    public void setProductCreatedResponse(ProductAvaiableInStore productAvaiableInStore) {
+        this.productAvaiableInStore = productAvaiableInStore;
     }
 }

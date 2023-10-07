@@ -38,4 +38,7 @@ public class ErrorMessage {
     static final public String PASSWORD_CANNOT_BE_EMPTY_OR_BLANK= "0017::Critical,Password cannot be empty or blank";
     static final public String EMAIL_CANNOT_BE_EMPTY_OR_BLANK= "0017::Critical,Email cannot be empty or blank";
 
+    static final public String USER_DONT_EXIST_1= "0018::Critical,User with the emilId entered (";
+    static final public String USER_DONT_EXIST_2= ") doesn't exit with us please sign up";
+    static final public String INCORRECT_PASSWORD_ENTERED= "0018::Critical,Password entered is incorrect";
 }

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin("*")
-@RequestMapping("/api")
+@RequestMapping("/auth")
 public class AuthenticationAndAuthorizationController {
 
     Logger log = LoggerFactory.getLogger(AuthenticationAndAuthorizationController.class);
@@ -25,12 +25,24 @@ public class AuthenticationAndAuthorizationController {
 
 
     @PostMapping(value = "/v1/sign-up", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Response> registerUserSignUP(@RequestBody RegisterUserInputBody registerUserInputBody) {
+    public ResponseEntity<Response> registerUserSignUP(@RequestBody SignUpUserInputBody signUpUserInputBody) {
         InternalProcessCommonResponse internalProcessCommonResponse = new InternalProcessCommonResponse();
         String refId = utilityMethods.uniqueRefIdGenerate();
         Response response = new Response();
-        userService.registerUser(registerUserInputBody, internalProcessCommonResponse, response, refId);
+        userService.registerUser(signUpUserInputBody, internalProcessCommonResponse, response, refId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+//    @PostMapping(value = "/v1/sign-in", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Response> registerUserSignIN(@RequestBody SignInUserInputBody signInUserInputBody) {
+//        InternalProcessCommonResponse internalProcessCommonResponse = new InternalProcessCommonResponse();
+//        String refId = utilityMethods.uniqueRefIdGenerate();
+//        Response response = new Response();
+//        userService.signIn(signInUserInputBody, internalProcessCommonResponse, response, refId);
+//        return new ResponseEntity<>(response, HttpStatus.OK);
+//    }
+
+
+
 
 }

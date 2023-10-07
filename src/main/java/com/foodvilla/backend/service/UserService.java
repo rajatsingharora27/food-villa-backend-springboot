@@ -4,6 +4,7 @@ import com.foodvilla.backend.constants.ErrorMessage;
 import com.foodvilla.backend.dao.RegisterUserDao;
 import com.foodvilla.backend.mapper.UserAuthenticationAndAuthorizationMapper;
 import com.foodvilla.backend.models.*;
+//import com.foodvilla.backend.models.ResponseDataIndividualControllerResponseFiled.UserSignIn;
 import com.foodvilla.backend.models.ResponseDataIndividualControllerResponseFiled.UserSignUpDetails;
 import com.foodvilla.backend.repository.RegisteredUserRepository;
 import com.foodvilla.backend.utils.UtilityMethods;
@@ -11,7 +12,8 @@ import com.foodvilla.backend.validation.Validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+//import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -35,47 +37,84 @@ public class UserService {
     @Autowired
     private UserAuthenticationAndAuthorizationMapper userAuthenticationAndAuthorizationMapper;
 
+//    private final PasswordEncoder passwordEncoder;
+//
+//    @Autowired
+//    public UserService(PasswordEncoder passwordEncoder) {
+//        this.passwordEncoder = passwordEncoder;
+//    }
 
-    public void registerUser(RegisterUserInputBody registerUserInputBody, InternalProcessCommonResponse internalProcessCommonResponse, Response response, String refId) {
+
+    public void registerUser(SignUpUserInputBody signUpUserInputBody, InternalProcessCommonResponse internalProcessCommonResponse, Response response, String refId) {
         response.setRefId(refId);
         List<String> messageList = new ArrayList<>();
         ResponseData responseData=new ResponseData();
         // check if user is already present or not
-        RegisterUserDao userObject = registeredUserRepository.findByEmailId(registerUserInputBody.getEmailId());
+        RegisterUserDao userObject = registeredUserRepository.findByEmailId(signUpUserInputBody.getEmailId());
         if (userObject != null) {
             messageList.add(ErrorMessage.USER_ALREADY_EXIST_1 + userObject.getEmail() + ErrorMessage.USER_ALREADY_EXIST_2);
             internalProcessCommonResponse.setErrorMessageList(messageList);
             List<ErrorMessageListWithCode>errorList=utilityMethods.criticalErrorMessageList(internalProcessCommonResponse);
             response.setMessage(errorList);
         } else {
-            validation.validateUserDetailsInPut(registerUserInputBody, internalProcessCommonResponse);
+            validation.validateUserDetailsInPut(signUpUserInputBody, internalProcessCommonResponse);
             if(internalProcessCommonResponse.isValid){
                 //saveUser to DB;
-                RegisterUserDao userEntity=saveUser(registerUserInputBody);
+                RegisterUserDao userEntity=saveUser(signUpUserInputBody);
                 registeredUserRepository.save(userEntity);
-                UserSignUpDetails userSignup=userAuthenticationAndAuthorizationMapper.mapSignUpUserData(registerUserInputBody);
+                UserSignUpDetails userSignup=userAuthenticationAndAuthorizationMapper.mapSignUpUserData(signUpUserInputBody);
+
                 responseData.setUserSignUpDetails(userSignup);
                 response.setResponseData(responseData);
+
+                // generate jwt token for the user and sent to UI in response
+                //join with the userProductSelectedTable and other information as well
             }else{
                 List<ErrorMessageListWithCode>errorList=utilityMethods.criticalErrorMessageList(internalProcessCommonResponse);
                 response.setMessage(errorList);
             }
-            // generate jwt token for the user and sent to UI in response
-            //join with the userProductSelectedTable and other information as well
+
         }
-//        return response;
     }
 
-    private RegisterUserDao saveUser(RegisterUserInputBody registerUserInputBody) {
+//    public void signIn(SignInUserInputBody signInUserInputBody, InternalProcessCommonResponse internalProcessCommonResponse, Response response, String refId){
+//        List<String> messageList = new ArrayList<>();
+//        response.setRefId(refId);
+//        RegisterUserDao user=registeredUserRepository.findByEmailId(signInUserInputBody.getEmailId());
+//        ResponseData responseData=new ResponseData();
+//        if(user==null){
+//            messageList.add(ErrorMessage.USER_DONT_EXIST_1 + signInUserInputBody.getEmailId()+ ErrorMessage.USER_DONT_EXIST_2);
+//            internalProcessCommonResponse.setErrorMessageList(messageList);
+//            List<ErrorMessageListWithCode>errorList=utilityMethods.criticalErrorMessageList(internalProcessCommonResponse);
+//            response.setMessage(errorList);
+//        }else{
+//            //validate Password Entered
+//            if(!passwordEncoder.matches(signInUserInputBody.getPassword(),user.getPassword())){
+//                messageList.add(ErrorMessage.INCORRECT_PASSWORD_ENTERED);
+//                internalProcessCommonResponse.setErrorMessageList(messageList);
+//                List<ErrorMessageListWithCode>errorList=utilityMethods.criticalErrorMessageList(internalProcessCommonResponse);
+//                response.setMessage(errorList);
+//            }else{
+////               String jwt= utilityMethods.generateJwtToken(signInUserInputBody.emailId);
+//                UserSignIn userSignIn=new UserSignIn("success","Login successful","jwt","2 Days");
+//
+//                responseData.setUserSignInDetails(userSignIn);
+//                response.setResponseData(responseData);
+//            }
+//        }
+//
+//    }
+
+
+
+    private RegisterUserDao saveUser(SignUpUserInputBody signUpUserInputBody) {
         RegisterUserDao registerUserDao=new RegisterUserDao();
         try {
-
-            BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(16);
-            String encryptedPassword = encoder.encode(registerUserInputBody.getPassword());
-            registerUserDao.setUserName(registerUserInputBody.getUserName());
-            registerUserDao.setEmail(registerUserInputBody.getEmailId());
-            registerUserDao.setPassword(encryptedPassword);
-            registerUserDao.setPhoneNumber(registerUserInputBody.getPhoneNumber());
+//            String encryptedPassword = passwordEncoder.encode(signUpUserInputBody.getPassword());
+            registerUserDao.setUserName(signUpUserInputBody.getUserName());
+            registerUserDao.setEmail(signUpUserInputBody.getEmailId());
+//            registerUserDao.setPassword(encryptedPassword);
+            registerUserDao.setPhoneNumber(signUpUserInputBody.getPhoneNumber());
             return registerUserDao;
 
         }catch (Exception ex){

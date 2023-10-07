@@ -1,6 +1,6 @@
 package com.foodvilla.backend.mapper;
 
-import com.foodvilla.backend.models.RegisterUserInputBody;
+import com.foodvilla.backend.models.SignUpUserInputBody;
 import com.foodvilla.backend.models.ResponseDataIndividualControllerResponseFiled.UserSignUpDetails;
 import org.springframework.stereotype.Service;
 
@@ -8,10 +8,10 @@ import org.springframework.stereotype.Service;
 public class UserAuthenticationAndAuthorizationMapper {
 
 
-   public UserSignUpDetails mapSignUpUserData(RegisterUserInputBody registerUserInputBody){
+   public UserSignUpDetails mapSignUpUserData(SignUpUserInputBody signUpUserInputBody){
       UserSignUpDetails userSignUpDetails=new UserSignUpDetails();
-      userSignUpDetails.setEmailId(registerUserInputBody.getEmailId());
-      userSignUpDetails.setUsername(registerUserInputBody.getUserName());
+      userSignUpDetails.setEmailId(signUpUserInputBody.getEmailId());
+      userSignUpDetails.setUsername(signUpUserInputBody.getUserName());
       return  userSignUpDetails;
    }
 }

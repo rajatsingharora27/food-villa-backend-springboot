@@ -1,8 +1,11 @@
 package com.foodvilla.backend.models.ResponseDataIndividualControllerResponseFiled;
 
 import com.foodvilla.backend.models.ProductDetails;
+import org.springframework.format.annotation.DateTimeFormat;
 
-public class ProductCreatedResponse {
+import java.util.Date;
+
+public class ProductAvaiableInStore {
 
     private String productName;
 
@@ -17,6 +20,9 @@ public class ProductCreatedResponse {
     private String productCategory;
 
     private ProductDetails productDetails;
+
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
+    private Date createdDate = new Date();
 
     public String getProductName() {
         return productName;

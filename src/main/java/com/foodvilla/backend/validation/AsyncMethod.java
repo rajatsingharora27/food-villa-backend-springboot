@@ -3,7 +3,7 @@ package com.foodvilla.backend.validation;
 import com.foodvilla.backend.constants.ErrorMessage;
 import com.foodvilla.backend.models.InternalProcessCommonResponse;
 import com.foodvilla.backend.models.ProductDetails;
-import com.foodvilla.backend.models.RegisterUserInputBody;
+import com.foodvilla.backend.models.SignUpUserInputBody;
 import com.foodvilla.backend.repository.ProductCreateRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,7 +105,7 @@ public class AsyncMethod {
     }
 
     @Async
-    public CompletableFuture<Boolean> validateUserName(RegisterUserInputBody userDetailsInput, InternalProcessCommonResponse internalProcessCommonResponse, List<String> errorMessage) {
+    public CompletableFuture<Boolean> validateUserName(SignUpUserInputBody userDetailsInput, InternalProcessCommonResponse internalProcessCommonResponse, List<String> errorMessage) {
         if(isEmptyOrNull(userDetailsInput.getUserName())){
             errorMessage.add(ErrorMessage.USER_NAME_CANNOT_BE_EMPTY_OR_BLANK);
             internalProcessCommonResponse.setValid(Boolean.FALSE);
@@ -113,7 +113,7 @@ public class AsyncMethod {
         }return CompletableFuture.completedFuture(Boolean.TRUE);
     }
 
-    public CompletableFuture<Boolean> validatePhoneNumber(RegisterUserInputBody userDetailsInput, InternalProcessCommonResponse internalProcessCommonResponse, List<String> errorMessage){
+    public CompletableFuture<Boolean> validatePhoneNumber(SignUpUserInputBody userDetailsInput, InternalProcessCommonResponse internalProcessCommonResponse, List<String> errorMessage){
         if(isEmptyOrNull(userDetailsInput.getPhoneNumber())){
             errorMessage.add(ErrorMessage.PHONE_NUMBER_CANNOT_BE_EMPTY_OR_BLANK);
             internalProcessCommonResponse.setValid(Boolean.FALSE);
@@ -127,7 +127,7 @@ public class AsyncMethod {
         return CompletableFuture.completedFuture(Boolean.TRUE);
     }
 
-    public CompletableFuture<Boolean> validatePassword(RegisterUserInputBody userDetailsInput, InternalProcessCommonResponse internalProcessCommonResponse, List<String> errorMessage){
+    public CompletableFuture<Boolean> validatePassword(SignUpUserInputBody userDetailsInput, InternalProcessCommonResponse internalProcessCommonResponse, List<String> errorMessage){
         if(isEmptyOrNull(userDetailsInput.getPassword())){
             errorMessage.add(ErrorMessage.PASSWORD_CANNOT_BE_EMPTY_OR_BLANK);
             internalProcessCommonResponse.setValid(Boolean.FALSE);
@@ -136,7 +136,7 @@ public class AsyncMethod {
         return CompletableFuture.completedFuture(Boolean.TRUE);
     }
 
-    public CompletableFuture<Boolean> validateEmail(RegisterUserInputBody userDetailsInput, InternalProcessCommonResponse internalProcessCommonResponse, List<String> errorMessage){
+    public CompletableFuture<Boolean> validateEmail(SignUpUserInputBody userDetailsInput, InternalProcessCommonResponse internalProcessCommonResponse, List<String> errorMessage){
         if(isEmptyOrNull(userDetailsInput.getEmailId())){
             errorMessage.add(ErrorMessage.EMAIL_CANNOT_BE_EMPTY_OR_BLANK);
             internalProcessCommonResponse.setValid(Boolean.FALSE);
