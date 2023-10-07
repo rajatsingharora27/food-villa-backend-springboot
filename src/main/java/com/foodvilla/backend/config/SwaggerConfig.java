@@ -1,32 +1,48 @@
 package com.foodvilla.backend.config;
 
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.service.ApiInfo;
-import springfox.documentation.service.Contact;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
 
-import java.util.Collections;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Contact;
+import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.info.License;
+import io.swagger.v3.oas.models.servers.Server;
 
 
 @Configuration
 
 public class SwaggerConfig {
-    @Bean
-    public Docket api() {
-        return new Docket(DocumentationType.SWAGGER_2)
-                .apiInfo(getInfo())
-                .select()
-                .apis(RequestHandlerSelectors.any())
-                .paths(PathSelectors.any())
-                .build();
-    }
 
-    private ApiInfo getInfo() {
-        return new ApiInfo("Food-villa-backend-api" , "","1.0","",new Contact("rajatsingharora","","rajatsingharora27@gmail.com"),"","", Collections.emptyList());
+
+    @Bean
+    public OpenAPI myOpenAPI() {
+        Server devServer = new Server();
+//        devServer.setUrl(devUrl);
+        devServer.setDescription("Server URL in Development environment");
+
+//        Server prodServer = new Server();
+//        prodServer.setUrl(prodUrl);
+//        prodServer.setDescription("Server URL in Production environment");
+
+        Contact contact = new Contact();
+        contact.setEmail("rajatrigharora96@gmail.com");
+        contact.setName("Rajat");
+//        contact.setUrl("https://www.bezkoder.com");
+
+//        License mitLicense = new License().name("MIT License").url("https://choosealicense.com/licenses/mit/");
+
+        Info info = new Info()
+                .title("FOOD-VILLA APPLICATION")
+                .version("1.0")
+                .contact(contact)
+                .description("API FOR FOOD-Villa Backend.").termsOfService("https://www.bezkoder.com/terms");
+//                .license(mitLicense);
+
+        return new OpenAPI().info(info).servers(List.of(devServer));
     }
 }
