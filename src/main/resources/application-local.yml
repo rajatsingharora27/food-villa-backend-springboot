@@ -11,3 +11,6 @@ spring:
 
 cloudinary:
   api-secret: ${CLOUDINARY_SECRET}
+
+jwt:
+  secret: "nvorwnvowntunvjownvownvlwrionrewgrgjwrgwkjrnwmriwrjngeq"
