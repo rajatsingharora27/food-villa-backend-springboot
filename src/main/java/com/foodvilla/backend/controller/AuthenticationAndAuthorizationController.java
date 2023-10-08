@@ -2,6 +2,7 @@ package com.foodvilla.backend.controller;
 
 import com.foodvilla.backend.models.InternalProcessCommonResponse;
 import com.foodvilla.backend.models.Response;
+import com.foodvilla.backend.models.SignInUserInputBody;
 import com.foodvilla.backend.models.SignUpUserInputBody;
 import com.foodvilla.backend.service.UserService;
 import com.foodvilla.backend.utils.UtilityMethods;
@@ -32,6 +33,15 @@ public class AuthenticationAndAuthorizationController {
         String refId = utilityMethods.uniqueRefIdGenerate();
         Response response = new Response();
         userService.registerUser(signUpUserInputBody, internalProcessCommonResponse, response, refId);
+        return new ResponseEntity<>(response, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/v1/sign-in", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Response> registerUserSignIN(@RequestBody SignInUserInputBody signInUserInputBody) {
+        InternalProcessCommonResponse internalProcessCommonResponse = new InternalProcessCommonResponse();
+        String refId = utilityMethods.uniqueRefIdGenerate();
+        Response response = new Response();
+        userService.signIn(signInUserInputBody, internalProcessCommonResponse, response, refId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }
