@@ -3,6 +3,7 @@ package com.foodvilla.backend.utils;
 import com.foodvilla.backend.constants.ApplicationConstants;
 import com.foodvilla.backend.models.ErrorMessageListWithCode;
 import com.foodvilla.backend.models.InternalProcessCommonResponse;
+import com.foodvilla.backend.models.SignInUserInputBody;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -49,12 +50,17 @@ public class UtilityMethods {
         Key secretKey=getSigningKey();
         jwtToken = Jwts.builder()
                 .claim("emailId", email)
-                .signWith(secretKey)
+                .setSubject(email)
+                .signWith(secretKey,SignatureAlgorithm.HS256)
                 .setId(UUID.randomUUID().toString())
                 .setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(new Date(System.currentTimeMillis() + ApplicationConstants.EXPIRATION_TIME))
                 .compact();
         return jwtToken;
+    }
+
+    public void validateJwt(){
+
     }
 
 

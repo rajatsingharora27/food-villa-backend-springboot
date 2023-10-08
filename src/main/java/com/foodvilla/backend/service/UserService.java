@@ -2,12 +2,14 @@ package com.foodvilla.backend.service;
 
 import com.foodvilla.backend.constants.ErrorMessage;
 import com.foodvilla.backend.dao.RegisterUserDao;
+import com.foodvilla.backend.dao.Role;
 import com.foodvilla.backend.mapper.UserAuthenticationAndAuthorizationMapper;
 import com.foodvilla.backend.models.*;
 import com.foodvilla.backend.models.ResponseDataIndividualControllerResponseFiled.UserSignIn;
 import com.foodvilla.backend.models.ResponseDataIndividualControllerResponseFiled.UserSignUpDetails;
 import com.foodvilla.backend.repository.RegisteredUserRepository;
 import com.foodvilla.backend.utils.UtilityMethods;
+//import com.foodvilla.backend.validation.JwtFilter;
 import com.foodvilla.backend.validation.Validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +37,9 @@ public class UserService {
     @Autowired
     private UserAuthenticationAndAuthorizationMapper userAuthenticationAndAuthorizationMapper;
 
+//    @Autowired
+//    private JwtFilter jwtFilter;
+
     private final PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -61,11 +66,14 @@ public class UserService {
                 RegisterUserDao userEntity = saveUser(signUpUserInputBody);
                 registeredUserRepository.save(userEntity);
                 UserSignUpDetails userSignup = userAuthenticationAndAuthorizationMapper.mapSignUpUserData(signUpUserInputBody);
+                String jwt = utilityMethods.generateJwtToken(signUpUserInputBody.getEmailId());
 
+                userSignup.setToken(jwt);
                 responseData.setUserSignUpDetails(userSignup);
                 response.setResponseData(responseData);
 
                 // generate jwt token for the user and sent to UI in response
+
                 //join with the userProductSelectedTable and other information as well
             } else {
                 List<ErrorMessageListWithCode> errorList = utilityMethods.criticalErrorMessageList(internalProcessCommonResponse);
@@ -104,6 +112,10 @@ public class UserService {
 
     }
 
+//    public void checkUser(SignInUserInputBody signInUserInputBody){
+//        jwtFilter.doFilter(signInUserInputBody);
+//    }
+
 
     private RegisterUserDao saveUser(SignUpUserInputBody signUpUserInputBody) {
         RegisterUserDao registerUserDao = new RegisterUserDao();
@@ -111,6 +123,7 @@ public class UserService {
 //            String encryptedPassword = passwordEncoder.encode(signUpUserInputBody.getPassword());
             registerUserDao.setUserName(signUpUserInputBody.getUserName());
             registerUserDao.setEmail(signUpUserInputBody.getEmailId());
+            registerUserDao.setRole(Role.USER);
 //            registerUserDao.setPassword(encryptedPassword);
             registerUserDao.setPhoneNumber(signUpUserInputBody.getPhoneNumber());
             return registerUserDao;

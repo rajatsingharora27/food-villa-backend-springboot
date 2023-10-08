@@ -44,4 +44,11 @@ public class AuthenticationAndAuthorizationController {
         userService.signIn(signInUserInputBody, internalProcessCommonResponse, response, refId);
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
+
+    @PostMapping(value = "/v1/validate", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public void userValidation(@RequestBody SignInUserInputBody signInUserInputBody){
+
+    }
+
+
 }
