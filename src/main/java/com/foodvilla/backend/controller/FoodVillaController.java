@@ -2,7 +2,8 @@ package com.foodvilla.backend.controller;
 
 import com.foodvilla.backend.models.*;
 import com.foodvilla.backend.service.ProductService;
-import com.foodvilla.backend.validation.ProductCreationValidate;
+import com.foodvilla.backend.utils.UtilityMethods;
+import com.foodvilla.backend.validation.Validation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ public class FoodVillaController {
 
     Logger log = LoggerFactory.getLogger(FoodVillaController.class);
     @Autowired
-    private ProductCreationValidate productCreationValidate;
+    private Validation validation;
 
 
     @Value("${spring.profiles.active}")
@@ -33,32 +34,36 @@ public class FoodVillaController {
     @Autowired
     private ProductService productService;
 
+    @Autowired
+    private UtilityMethods utilityMethods;
+
 
 
 //   ************************************ Route Available to Admin only*******************************
-    @PostMapping(value = "/v1/add-product" )
-    public ResponseEntity<Response> createProduct(@RequestBody InputRequestCreateProduct inputRequest){
+@PostMapping(value = "/v1/add-product" )
+public ResponseEntity<Response> createProduct(@RequestBody InputRequestCreateProduct inputRequest){
 
-        InternalProcessCommonResponse internalProcessCommonResponse =new InternalProcessCommonResponse();
-        Response response=new Response();
-        log.info("{{createProduct()}} controller stated");
-
-        productCreationValidate.validateProductDetails(inputRequest, internalProcessCommonResponse);
-        if(internalProcessCommonResponse.isValid){
-            productService.addNewProduct(inputRequest);
-        }
-        if(internalProcessCommonResponse.getErrorMessageList()!=null && !internalProcessCommonResponse.getErrorMessageList().isEmpty()){
-            List<String> errorMessage =new ArrayList<>();
-            for(String err : internalProcessCommonResponse.getErrorMessageList()){
-                errorMessage.add(err);
-            }
-            response.setMessage(errorMessage);
-            response.setProductAddMessage("Product cannot be added");
-            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
-        }
-        response.setProductAddMessage("data Saved");
-        return new ResponseEntity<>(response, HttpStatus.OK);
+    String refId=utilityMethods.uniqueRefIdGenerate();
+    InternalProcessCommonResponse internalProcessCommonResponse =new InternalProcessCommonResponse();
+    Response response=new Response();
+    ResponseData responseData=new ResponseData();
+    response.setRefId(refId);
+    log.info("{{createProduct()}} controller stated for the redId :{} " , refId);
+    validation.validateProductDetails(inputRequest, internalProcessCommonResponse);
+    if(internalProcessCommonResponse.isValid){
+        productService.addNewProduct(inputRequest);
     }
+    if(internalProcessCommonResponse.getErrorMessageList()!=null && !internalProcessCommonResponse.getErrorMessageList().isEmpty()){
+        List<ErrorMessageListWithCode> errorMessage =utilityMethods.criticalErrorMessageList(internalProcessCommonResponse);
+        response.setMessage(errorMessage);
+        responseData.setIsProductAdded("Product Cannot be added");
+        response.setResponseData(responseData);
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
+    }
+    responseData.setIsProductAdded("Product Added successfully");
+    response.setResponseData(responseData);
+    return new ResponseEntity<>(response, HttpStatus.OK);
+}
 
     @PostMapping("/v1/upload-image")
     public void uploadImage(@RequestParam("imageFile")MultipartFile file ,@RequestParam("productName") String productName) throws IOException {
