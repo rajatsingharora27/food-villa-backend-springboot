@@ -94,7 +94,7 @@ public class UserService {
                 List<ErrorMessageListWithCode> errorList = utilityMethods.criticalErrorMessageList(internalProcessCommonResponse);
                 response.setMessage(errorList);
             } else {
-//               String jwt= utilityMethods.generateJwtToken(signInUserInputBody.emailId);
+               String jwt= utilityMethods.generateJwtToken(signInUserInputBody.emailId);
                 UserSignIn userSignIn = new UserSignIn("success", "Login successful", "jwt", "2 Days");
 
                 responseData.setUserSignInDetails(userSignIn);
